@@ -1,0 +1,54 @@
+[user]
+    email = rcorradi.5a@bionexo.com
+    name = rafa_corradi
+
+[alias]
+    undocommit = reset --hard HEAD~1
+    undomerge = reset --hard HEAD@{1}
+    undopush = push -f origin HEAD^:master
+    unchanged = git update-index --assume-unchanged
+    # lazy alias
+    a = add --all .
+    b = branch
+    bs = !git b -a
+    c = checkout
+    change = "!f() { INITAL='[';BRANCH=$(git rev-parse --abbrev-ref HEAD);FINAL='] ';JIRA_TITLE=$(curl -G -s -k -u rafa_corradi:6653Ragc https://bionexo.atlassian.net/jira/rest/api/latest/issue/$BRANCH.json | awk -Fsummary'\":\"' {'print $2'} | awk -F'\",' {'print $1'});SPACER=' : ';USER_MESSAGE=$1;MESSAGE=$INITAL$BRANCH$FINAL$JIRA_TITLE$SPACER$USER_MESSAGE; git commit -m \"$MESSAGE\"; }; f"
+    cmt = commit -am
+    f = !git fetch -p && git fetch --all && git myUpdate
+    lg = log --graph  --pretty=format:'%C(bold red)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit --date=relative
+    # Requies track alias
+    newbranch = "!f() { git checkout -b $1 && git push origin $1 && git track $1; }; f"
+    open = "!f() { open `git remote -v | grep push | awk '{print $2}'`; }; f"
+    purge = !"git branch -d $(git branch --merged master | grep -v -e '*' -e 'master')"
+    st = status
+    list-commits = !git shortlog -s -n
+    track = "!f() { git checkout --track -B $1 origin/$1; }; f"
+    myUpdate = "!f() { BRANCH=$(git rev-parse --abbrev-ref HEAD); git st && git pull origin $BRANCH && git push origin $BRANCH; }; f"
+    recoverFile = "!f() { FILEPATH=$1;COMMITSHA=$(git rev-list -n 1 HEAD -- $FILEPATH);git checkout $COMMITSHA~1 $FILEPATH; }; f"
+
+[core]
+    whitespace = space-before-tab,indent-with-non-tab,trailing-space
+	autocrlf = true
+	excludesfile = C:\\Users\\cin_rcorradi\\Documents\\gitignore_global.txt
+
+[apply]
+    # Detect whitespace errors when applying a patch
+    whitespace = fix
+
+[merge]
+    # Include summaries of merged commits in newly created merge commit messages
+    log = true
+    summary = true
+
+# Use 'origin' as the default remote on the 'master' branch in all cases
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+
+[http]
+    sslVerify = false
+
+[url "https://"]
+    insteadOf = git://
+[winUpdater]
+	recentlySeenVersion = 2.18.0.windows.1
